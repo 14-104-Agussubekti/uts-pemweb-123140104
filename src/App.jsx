@@ -164,7 +164,7 @@ function App() {
         <div className="search-overlay-cna">
           {/* ... (kode overlay pencarian Anda) ... */}
           <div className="search-overlay-header">
-            <span className="logo-text-overlay">CNA</span>
+            <span className="logo-text-overlay">VoxA</span>
             <button className="search-overlay-close-btn" onClick={closeSearch}>
               <FaTimes />
             </button>
