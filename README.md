@@ -70,6 +70,5 @@ Proyek ini telah mengalami refactor besar-besaran dan sekarang memiliki fitur-fi
 Proyek ini diinisiasi menggunakan `npm create vite@latest`.
 
 **1. Clone Repositori**
-(Ganti dengan URL repo Anda)
 ```bash
-git clone [URL_REPO_ANDA]
+git clone https://github.com/14-104-Agussubekti/uts-pemweb-123140104.git
