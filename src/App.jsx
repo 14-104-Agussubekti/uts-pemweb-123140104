@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-// 👇 1. Impor fungsi dari date-fns
 import { formatDistanceToNow } from 'date-fns';
 import { id } from 'date-fns/locale'; // Impor bahasa Indonesia
 import { FaSearch, FaNewspaper, FaCaretDown, FaTimes } from 'react-icons/fa'; 
@@ -7,7 +6,6 @@ import Navbar from './components/Navbar';
 import ArticleList from './components/ArticleList';
 import Pagination from './components/Pagination';
 
-// --- PENGATURAN API (NEWSAPI.ORG) ---
 const API_KEY = 'e88f8987481848ad96196d4b4f0856d1';
 const BASE_URL = 'https://newsapi.org/v2/everything';
 const PAGE_SIZE = 12;
@@ -31,7 +29,6 @@ function App() {
   const [modalSearchQuery, setModalSearchQuery] = useState('');
 
   useEffect(() => {
-    // ... (Logika fetchNews Anda tetap sama)
     const fetchNews = async () => {
       setLoading(true);
       setError(null);
@@ -75,7 +72,6 @@ function App() {
     fetchNews();
   }, [category, query, date, language, page]);
 
-  // (Semua handler Anda tetap sama)
   const handleCategoryClick = (newCategory) => {
     setCategory(newCategory);
     setQuery(''); 
@@ -115,13 +111,10 @@ function App() {
   const handlePrevPage = () => setPage((prev) => Math.max(prev - 1, 1));
   const handleNextPage = () => setPage((prev) => Math.min(prev + 1, totalPages));
 
-  // 👇 2. Buat fungsi helper untuk memformat waktu
   const formatTimeAgo = (dateString) => {
     if (!dateString) return ''; // Handle jika datanya null
     try {
       const date = new Date(dateString);
-      // 'addSuffix: true' -> "yang lalu"
-      // 'locale: id' -> Bahasa Indonesia
       return formatDistanceToNow(date, { addSuffix: true, locale: id });
     } catch (error) {
       console.error("Format tanggal error:", error);
@@ -133,7 +126,6 @@ function App() {
   return (
     <div className="app">
       <header className="main-header">
-        {/* (Header top bar Anda tetap sama) */}
         <div className="header-top-bar">
           <div className="top-left" onClick={openSearch}>
             <FaSearch className="search-icon" />
@@ -159,12 +151,10 @@ function App() {
         />
       </header>
 
-      {/* (Overlay pencarian Anda tetap sama) */}
       {isSearchOpen && (
         <div className="search-overlay-cna">
-          {/* ... (kode overlay pencarian Anda) ... */}
           <div className="search-overlay-header">
-            <span className="logo-text-overlay">CNA</span>
+            <span className="logo-text-overlay">VoxA</span>
             <button className="search-overlay-close-btn" onClick={closeSearch}>
               <FaTimes />
             </button>
@@ -194,7 +184,6 @@ function App() {
       )}
 
       <main className="main-content-layout">
-        {/* (Sidebar-left Anda tetap sama) */}
         <aside className="sidebar-left">
           <h2 className="section-title">Terbaru</h2>
           {loading && <p>Loading latest...</p>}
@@ -246,7 +235,6 @@ function App() {
               <div className="sidebar-item-content">
                 <span className="sidebar-item-category">Lifestyle</span>
                 <h4 className="sidebar-item-title">{article.title}</h4>
-                {/* 👇 4. Ganti teks hardcoded dengan fungsi */}
                 <p className="sidebar-item-time">
                   {formatTimeAgo(article.publishedAt)}
                 </p>
@@ -255,17 +243,6 @@ function App() {
           ))}
         </aside>
       </main>
-
-      {/* Pagination (kita mungkin perlu menyembunyikannya) */}
-      {/* {!loading && !error && articles.length > 0 && (
-        <Pagination
-          currentPage={page}
-          totalPages={totalPages}
-          onPrevPage={handlePrevPage}
-          onNextPage={handleNextPage}
-        />
-      )}
-      */}
 
       <footer>
         <p>&copy; 2025 123140104. VoxA.</p>
