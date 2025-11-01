@@ -1,18 +1,19 @@
 /* --- Global & Reset --- */
 :root {
-  /* Palet Warna Baru (Disadur dari CNA untuk light mode) */
-  --cna-red: #bb0000;         /* Warna merah khas CNA */
-  --cna-text-dark: #333333;   /* Teks gelap utama */
-  --cna-text-medium: #666666; /* Teks abu-abu menengah */
-  --cna-text-light: #999999;  /* Teks abu-abu terang/aksen */
-  --cna-bg-light: #ffffff;    /* Latar belakang putih */
-  --cna-border: #eeeeee;      /* Border abu-abu terang */
-  --cna-bg-highlight: #f5f5f5; /* Latar belakang saat hover/selected */
-
-  /* Default font, disesuaikan agar mirip dengan referensi */
-  --font-family-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* Palet Warna Baru (Elegant Dark Mode) */
+  --primary-bg-dark: #1A1A2E;     /* Deep Navy / Midnight Blue */
+  --secondary-bg-dark: #252A4A;  /* Darker Royal Blue / Charcoal */
+  --text-light: #E0E0E0;         /* Off-White / Light Gray */
+  --text-medium: #A0A0B0;        /* Soft Silver */
+  --text-accent: #90CAF9;        /* Light Blue (untuk hover) */
+  --accent-primary: #64B5F6;     /* Medium Sky Blue (Tombol, Aksen Utama) */
+  --accent-secondary: #424769;   /* Dark Gray-Blue (Batas, Garis) */
   
-  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Bayangan lebih ringan untuk light mode */
+  /* Font baru yang lebih modern */
+  --font-family-main: 'Roboto', 'Open Sans', 'Lato', sans-serif;
+  
+  /* Bayangan baru untuk dark mode */
+  --shadow-dark: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
 * {
@@ -22,24 +23,25 @@
 }
 
 body {
-  font-family: var(--font-family-main);
+  font-family: var(--font-family-main); /* Menerapkan font baru */
   line-height: 1.6;
-  background-color: var(--cna-bg-light);
-  color: var(--cna-text-dark);
+  /* Menerapkan warna latar utama dan teks utama */
+  background-color: var(--primary-bg-dark);
+  color: var(--text-light);
 }
 
 .app {
-  max-width: 1280px; /* Lebar lebih besar agar mirip referensi */
+  max-width: 1280px;
   margin: 0 auto;
   padding: 1rem;
 }
 
 /* --- Main Header Layout --- */
 .main-header {
-  background: var(--cna-bg-light);
+  background: var(--primary-bg-dark); /* Header menyatu dengan BG */
   padding: 1rem 0;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--cna-border);
+  border-bottom: 1px solid var(--accent-secondary);
 }
 
 .header-top-bar {
@@ -47,39 +49,44 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
-  margin-bottom: 1rem; /* Jarak antara top bar dan navbar */
+  margin-bottom: 1rem;
 }
 
 .top-left, .top-right {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--cna-text-medium);
+  color: var(--text-medium);
   font-size: 0.9rem;
+  cursor: pointer; /* Menandakan bisa diklik */
+}
+
+.top-left:hover, .top-right:hover {
+  color: var(--text-accent); /* Hover dengan aksen biru */
 }
 
 .search-icon, .dropdown-icon {
-  color: var(--cna-text-light);
+  color: var(--text-medium);
 }
 
 .header-logo {
-  flex-grow: 1; /* Agar logo tetap di tengah saat konten lain berubah */
+  flex-grow: 1;
   text-align: center;
 }
 
 .logo-text {
-  font-size: 2.5rem; /* Ukuran font besar untuk placeholder logo */
+  font-size: 2.5rem;
   font-weight: 900;
-  color: var(--cna-red); /* Warna merah CNA */
+  color: var(--accent-primary); /* Logo menggunakan aksen biru */
 }
 
 /* --- Navbar (Main Navigation) --- */
 #navbar ul {
   list-style: none;
   display: flex;
-  justify-content: center; /* Rata tengah navigasi */
+  justify-content: center;
   gap: 1.5rem;
-  margin-bottom: 0; /* Tidak ada margin-bottom di sini */
+  margin-bottom: 0;
 }
 
 #navbar button {
@@ -89,75 +96,68 @@ body {
   cursor: pointer;
   font-weight: 600;
   transition: all 0.2s ease;
-  color: var(--cna-text-dark);
-  position: relative; /* Untuk underline */
+  color: var(--text-light); /* Teks terang */
+  position: relative;
 }
 
 #navbar button:hover {
-  color: var(--cna-red); /* Warna merah saat hover */
+  color: var(--text-accent); /* Aksen biru saat hover */
 }
 
 #navbar button.active {
-  color: var(--cna-red);
+  color: var(--accent-primary); /* Aksen biru utama saat aktif */
 }
 
-/* Underline untuk item navbar aktif */
 #navbar button.active::after {
   content: '';
   position: absolute;
   left: 0;
-  bottom: -5px; /* Sesuaikan posisi underline */
+  bottom: -5px;
   width: 100%;
   height: 2px;
-  background-color: var(--cna-red);
+  background-color: var(--accent-primary); /* Garis bawah biru */
 }
 
 
 /* --- Main Content Layout (CSS Grid) --- */
 .main-content-layout {
   display: grid;
-  grid-template-columns: 1.5fr 3fr 1.5fr; /* Kolom kiri, tengah, kanan */
-  gap: 1.5rem; /* Jarak antar kolom */
+  grid-template-columns: 1.5fr 3fr 1.5fr;
+  gap: 1.5rem;
   margin-top: 2rem;
 }
 
-/* --- Section Title --- */
 .section-title {
   font-size: 1.5rem;
   font-weight: bold;
-  color: var(--cna-text-dark);
+  color: var(--text-light);
   margin-bottom: 1rem;
-  padding-left: 0.5rem; /* Sedikit padding agar mirip referensi */
-  border-left: 4px solid var(--cna-red); /* Garis merah di samping */
+  padding-left: 0.5rem;
+  border-left: 4px solid var(--accent-primary); /* Garis aksen biru */
 }
 
 
 /* --- Sidebar Left: Terbaru --- */
 .sidebar-left {
-  padding-right: 1rem; /* Padding ke kanan untuk memisahkan dari tengah */
-  border-right: 1px solid var(--cna-border); /* Garis pemisah */
+  padding-right: 1rem;
+  border-right: 1px solid var(--accent-secondary); /* Garis batas */
 }
 
 .latest-news-item {
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--cna-border); /* Garis bawah setiap item */
+  border-bottom: 1px solid var(--accent-secondary);
 }
-
-.latest-news-item:last-child {
-  border-bottom: none; /* Item terakhir tidak ada border */
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
+.latest-news-item:last-child { border-bottom: none; }
 
 .latest-news-item a {
   text-decoration: none;
-  color: var(--cna-text-dark);
+  color: var(--text-light);
   display: block;
 }
 
 .latest-news-item a:hover .latest-news-title {
-  color: var(--cna-red); /* Judul merah saat hover */
+  color: var(--text-accent); /* Hover biru */
 }
 
 .latest-news-title {
@@ -169,17 +169,17 @@ body {
 
 .latest-news-source {
   font-size: 0.8rem;
-  color: var(--cna-text-light);
+  color: var(--text-medium); /* Silver */
 }
 
 /* --- Main Article Section (Kolom Tengah) --- */
 .main-article-section {
-  /* Box merah besar seperti di referensi */
-  background-color: var(--cna-red);
-  color: var(--cna-bg-light); /* Teks putih di latar merah */
-  border-radius: 8px; /* Sudut membulat */
-  overflow: hidden; /* Pastikan gambar tidak keluar */
-  position: relative; /* Untuk positioning teks di bawah gambar */
+  background-color: var(--secondary-bg-dark); /* Latar card */
+  color: var(--text-light);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-dark);
 }
 
 .main-hero-article {
@@ -190,30 +190,32 @@ body {
 
 .main-hero-article .hero-image {
   width: 100%;
-  height: 300px; /* Tinggi gambar hero */
+  height: 300px;
   object-fit: cover;
-  display: block; /* Hilangkan spasi di bawah gambar */
+  display: block;
+  border-bottom: 1px solid var(--accent-secondary); /* Garis batas */
 }
 
 .main-hero-article .hero-content {
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Agar konten mengisi sisa ruang */
-  justify-content: center; /* Rata tengah vertikal teks */
+  flex-grow: 1;
+  justify-content: center;
   text-align: center;
 }
 
 .main-hero-article .hero-category {
-  background-color: rgba(255, 255, 255, 0.2); /* Latar kategori transparan */
-  color: var(--cna-bg-light);
+  /* Kategori dengan aksen biru */
+  background-color: rgba(144, 202, 249, 0.1); /* Biru transparan */
+  color: var(--text-accent);
   padding: 0.3rem 0.8rem;
   border-radius: 4px;
   font-size: 0.8rem;
   font-weight: bold;
   display: inline-block;
   margin-bottom: 1rem;
-  align-self: center; /* Agar kategori di tengah */
+  align-self: center;
 }
 
 .main-hero-article .hero-title {
@@ -225,45 +227,38 @@ body {
 
 .main-hero-article .hero-time {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-medium); /* Silver */
 }
 
 
 /* --- Sidebar Right: Berita Samping dengan Gambar --- */
 .sidebar-right {
-  padding-left: 1rem; /* Padding ke kiri */
-  border-left: 1px solid var(--cna-border); /* Garis pemisah */
+  padding-left: 1rem;
+  border-left: 1px solid var(--accent-secondary);
 }
 
 .sidebar-news-item {
   display: flex;
-  align-items: flex-start; /* Align ke atas */
+  align-items: flex-start;
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--cna-border);
+  border-bottom: 1px solid var(--accent-secondary);
 }
-
-.sidebar-news-item:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
+.sidebar-news-item:last-child { border-bottom: none; }
 
 .sidebar-news-item .sidebar-item-image {
-  width: 100px; /* Lebar gambar kecil di sidebar */
-  height: 70px; /* Tinggi gambar kecil */
+  width: 100px;
+  height: 70px;
   object-fit: cover;
   border-radius: 4px;
   margin-right: 0.8rem;
 }
 
-.sidebar-news-item .sidebar-item-content {
-  flex-grow: 1;
-}
+.sidebar-news-item .sidebar-item-content { flex-grow: 1; }
 
 .sidebar-news-item .sidebar-item-category {
   font-size: 0.75rem;
-  color: var(--cna-text-light);
+  color: var(--text-accent); /* Aksen biru */
   text-transform: uppercase;
   font-weight: bold;
   margin-bottom: 0.2rem;
@@ -274,33 +269,194 @@ body {
   font-size: 0.95rem;
   font-weight: 600;
   line-height: 1.3;
-  color: var(--cna-text-dark);
+  color: var(--text-light);
   text-decoration: none;
 }
 
 .sidebar-news-item .sidebar-item-title:hover {
-  color: var(--cna-red);
+  color: var(--text-accent);
 }
 
 .sidebar-news-item .sidebar-item-time {
   font-size: 0.75rem;
-  color: var(--cna-text-light);
+  color: var(--text-medium);
   margin-top: 0.2rem;
 }
+
+
+/* --- Dropdown Edisi --- */
+.top-right {
+  position: relative;
+  cursor: pointer;
+}
+
+.edition-dropdown-menu {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  background-color: var(--secondary-bg-dark); /* Latar card */
+  border: 1px solid var(--accent-secondary);
+  border-radius: 4px;
+  box-shadow: var(--shadow-dark);
+  min-width: 150px;
+  z-index: 100;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.edition-item {
+  padding: 0.8rem 1.2rem;
+  font-size: 0.95rem;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.edition-item:hover {
+  background-color: var(--primary-bg-dark); /* Latar utama saat hover */
+}
+
+.edition-item.active {
+  color: var(--accent-primary); /* Biru aksen */
+  font-weight: bold;
+}
+
+
+/* --- Overlay Pencarian CNA Baru --- */
+.search-overlay-cna {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Latar belakang semi-transparan */
+  background-color: rgba(26, 26, 46, 0.95); 
+  z-index: 1000;
+  padding: 2rem 3rem;
+  animation: fadeIn 0.3s ease-out;
+  backdrop-filter: blur(5px); /* Efek blur (opsional) */
+}
+
+.search-overlay-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.logo-text-overlay {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--accent-primary); /* Biru aksen */
+}
+
+.search-overlay-close-btn {
+  background: none;
+  border: none;
+  font-size: 2.2rem;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.search-overlay-close-btn:hover {
+  color: var(--accent-primary);
+}
+
+.search-overlay-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cna-search-form {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid var(--accent-primary); /* Garis bawah biru */
+  margin-bottom: 2rem;
+}
+
+.cna-search-submit-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-medium);
+  padding: 0.5rem;
+  cursor: default;
+}
+
+.cna-search-input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  color: var(--text-light);
+  background: transparent; /* Latar transparan */
+  font-family: var(--font-family-main);
+}
+
+.cna-search-input::placeholder {
+  color: var(--accent-secondary); /* Placeholder lebih gelap */
+}
+
+.trending-topics-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.trending-title {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--text-medium); /* Silver */
+}
+
+.trending-topic-btn {
+  background: none;
+  border: 1px solid var(--accent-secondary);
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.trending-topic-btn:hover {
+  background-color: var(--accent-secondary);
+  border-color: var(--accent-primary);
+}
+
 
 /* --- Footer & Misc --- */
 footer {
   text-align: center;
   margin-top: 3rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--cna-border);
+  border-top: 1px solid var(--accent-secondary);
   font-size: 0.85rem;
-  color: var(--cna-text-light);
+  color: var(--text-medium);
 }
 
-/* Menyembunyikan SearchForm dan Pagination untuk saat ini */
-.search-form, .pagination {
-  display: none;
+.pagination {
+  display: none; /* Tetap sembunyikan pagination */
+}
+
+.loading-message,
+.error-message,
+.no-articles-message {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 3rem;
+  color: var(--text-medium); /* Silver */
+}
+.error-message {
+  color: #EF5350; /* Merah untuk error */
+}
+
+/* --- Animasi --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 
@@ -308,18 +464,18 @@ footer {
 
 @media (max-width: 992px) {
   .main-content-layout {
-    grid-template-columns: 1fr; /* Satu kolom di bawah 992px */
+    grid-template-columns: 1fr;
   }
   .sidebar-left, .sidebar-right {
-    border: none; /* Hapus border samping */
+    border: none;
     padding-right: 0;
     padding-left: 0;
-    margin-bottom: 1.5rem; /* Tambah jarak antar section */
+    margin-bottom: 1.5rem;
   }
   .sidebar-left .section-title, .sidebar-right .section-title {
     padding-left: 0;
-    border-left: none; /* Hapus garis merah */
-    text-align: center; /* Rata tengah judul sidebar */
+    border-left: none;
+    text-align: center;
   }
   .main-hero-article .hero-title {
     font-size: 1.6rem;
@@ -328,13 +484,13 @@ footer {
 
 @media (max-width: 768px) {
   .header-top-bar {
-    flex-wrap: wrap; /* Izinkan wrap untuk elemen top bar */
+    flex-wrap: wrap;
     justify-content: center;
     gap: 1rem;
   }
   .header-logo {
-    order: -1; /* Pindahkan logo ke atas pada mobile */
-    flex-basis: 100%; /* Agar logo mengambil seluruh lebar */
+    order: -1;
+    flex-basis: 100%;
     margin-bottom: 1rem;
   }
   #navbar ul {
@@ -349,254 +505,13 @@ footer {
     font-size: 1.3rem;
   }
   .latest-news-item, .sidebar-news-item {
-    padding-left: 1rem; /* Padding agar tidak terlalu menempel tepi */
+    padding-left: 1rem;
     padding-right: 1rem;
   }
-}
-
-/* --- Search Overlay & Modal --- */
-
-
-.close-search-btn:hover {
-  color: var(--cna-text-dark);
-}
-
-/* --- Style Ulang SearchForm untuk Modal --- */
-.search-form {
-  /* Hapus display: none; jika masih ada di tempat lain */
-  display: block; 
-  animation: none; /* Hapus animasi default jika ada */
-  
-  /* Layout baru untuk form di dalam modal */
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* 2 kolom */
-  gap: 1.5rem;
-  
-  /* Reset margin/padding default */
-  padding: 0;
-  margin: 0;
-  border: none;
-  box-shadow: none;
-  background: none;
-}
-
-.search-form h2 {
-  grid-column: 1 / -1; /* Judul mengambil 2 kolom */
-  color: var(--cna-red);
-  margin-bottom: 0;
-}
-.search-form p {
-  grid-column: 1 / -1; /* Deskripsi mengambil 2 kolom */
-  margin-bottom: 1rem;
-  color: var(--cna-text-medium);
-}
-
-.search-form .form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Input Keyword dan Tanggal dibuat lebih besar */
-.search-form .form-group:nth-of-type(1),
-.search-form .form-group:nth-of-type(2) {
-  grid-column: 1 / -1; /* Ambil 2 kolom penuh */
-}
-
-.search-form .form-group:nth-of-type(3) {
-  grid-column: 1 / 2; /* Kolom 1 */
-}
-.search-form .form-group:nth-of-type(4) {
-  grid-column: 2 / 3; /* Kolom 2 */
-}
-
-.search-form input,
-.search-form select {
-  width: 100%;
-  padding: 0.8rem;
-  border: 1px solid var(--cna-border);
-  border-radius: 4px;
-  font-size: 1rem;
-  background: var(--cna-bg-highlight);
-}
-.search-form input:focus,
-.search-form select:focus {
-  outline: 2px solid var(--cna-red);
-  border-color: var(--cna-red);
-  background: var(--cna-bg-light);
-}
-
-.search-form button {
-  grid-column: 1 / -1; /* Tombol ambil 2 kolom penuh */
-  padding: 1rem;
-  background-color: var(--cna-red);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
-  width: 100%;
-}
-
-.search-form button:hover {
-  background-color: #9a0000; /* Merah lebih gelap saat hover */
-}
-
-
-/* --- Animasi --- */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideIn {
-  from { transform: translateY(-30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-/* --- Hapus atau Ganti Style Overlay Lama --- */
-/* Hapus .search-overlay, .search-modal, .close-search-btn, dan style ulang .search-form */
-
-
-/* --- Dropdown Edisi --- */
-.top-right {
-  position: relative; /* Diperlukan agar dropdown bisa diposisikan */
-  cursor: pointer;
-}
-
-.edition-dropdown-menu {
-  position: absolute;
-  top: 120%; /* Posisikan di bawah elemen Edisi */
-  right: 0;
-  background-color: var(--cna-bg-light);
-  border: 1px solid var(--cna-border);
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  min-width: 150px;
-  z-index: 100;
-  animation: fadeIn 0.2s ease-out; /* Gunakan animasi yang sudah ada */
-}
-
-.edition-item {
-  padding: 0.8rem 1.2rem;
-  font-size: 0.95rem;
-  color: var(--cna-text-dark);
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.edition-item:hover {
-  background-color: var(--cna-bg-highlight);
-}
-
-.edition-item.active {
-  color: var(--cna-red);
-  font-weight: bold;
-}
-
-
-/* --- Overlay Pencarian CNA Baru --- */
-.search-overlay-cna {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--cna-bg-light); /* Latar belakang putih solid */
-  z-index: 1000;
-  padding: 2rem 3rem;
-  animation: fadeIn 0.3s ease-out;
-}
-
-.search-overlay-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 3rem;
-}
-
-.logo-text-overlay {
-  font-size: 2.5rem;
-  font-weight: 900;
-  color: var(--cna-red);
-}
-
-.search-overlay-close-btn {
-  background: none;
-  border: none;
-  font-size: 2.2rem;
-  color: var(--cna-text-dark);
-  cursor: pointer;
-}
-
-.search-overlay-content {
-  max-width: 800px;
-  margin: 0 auto; /* Pusatkan konten pencarian */
-}
-
-.cna-search-form {
-  display: flex;
-  align-items: center;
-  border-bottom: 2px solid var(--cna-text-dark);
-  margin-bottom: 2rem;
-}
-
-.cna-search-submit-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: var(--cna-text-medium);
-  padding: 0.5rem;
-  cursor: default;
-}
-
-.cna-search-input {
-  flex-grow: 1;
-  border: none;
-  outline: none;
-  font-size: 1.5rem; /* Input teks besar */
-  padding: 0.5rem;
-  color: var(--cna-text-dark);
-  font-family: var(--font-family-main);
-}
-
-.cna-search-input::placeholder {
-  color: var(--cna-text-light);
-}
-
-.trending-topics-container {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.trending-title {
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: var(--cna-text-medium);
-}
-
-.trending-topic-btn {
-  background: none;
-  border: 1px solid var(--cna-border);
-  border-radius: 20px;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  color: var(--cna-text-dark);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.trending-topic-btn:hover {
-  background-color: var(--cna-bg-highlight);
-  border-color: var(--cna-text-dark);
-}
-
-/* --- Animasi --- */
-/* Anda seharusnya sudah punya ini, tapi pastikan ada */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  .search-overlay-cna {
+    padding: 1rem;
+  }
+  .cna-search-input {
+    font-size: 1.2rem;
+  }
 }
