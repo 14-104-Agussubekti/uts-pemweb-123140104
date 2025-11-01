@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { FaSearch, FaNewspaper, FaCaretDown } from 'react-icons/fa'; // Menambahkan FaSearch dan FaCaretDown
+// 👇 1. Tambahkan FaSearch, FaCaretDown, dan FaTimes (untuk tombol close)
+import { FaSearch, FaNewspaper, FaCaretDown, FaTimes } from 'react-icons/fa'; 
 import Navbar from './components/Navbar';
 import SearchForm from './components/SearchForm';
 import ArticleList from './components/ArticleList';
@@ -23,6 +24,9 @@ function App() {
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  // 👇 2. State baru untuk mengontrol overlay pencarian
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -83,15 +87,22 @@ function App() {
     setPage(1); 
   };
 
+  // 👇 3. Modifikasi handleSearchSubmit
   const handleSearchSubmit = (filters) => {
     setQuery(filters.query);
     setDate(filters.date);
     setLanguage(filters.language);
     setCountry(filters.country); 
     setCategory(''); 
-    setPage(1); 
+    setPage(1);
+    setIsSearchOpen(false); // Tutup overlay setelah mencari
   };
+  
+  // 👇 4. Fungsi untuk membuka dan menutup pencarian
+  const openSearch = () => setIsSearchOpen(true);
+  const closeSearch = () => setIsSearchOpen(false);
 
+  // (Handler pagination tidak berubah)
   const handlePrevPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
   };
@@ -100,44 +111,49 @@ function App() {
     setPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
+
   return (
     <div className="app">
       <header className="main-header">
         <div className="header-top-bar">
-          {/* Kiri: Search (kita akan implementasikan nanti) */}
-          <div className="top-left">
+          {/* 👇 5. Tambahkan onClick untuk membuka pencarian */}
+          <div className="top-left" onClick={openSearch}>
             <FaSearch className="search-icon" />
             <span className="search-text">Cari Berita</span>
           </div>
 
-          {/* Tengah: Logo */}
           <div className="header-logo">
-            {/* Untuk sekarang, gunakan teks placeholder. Ganti dengan <img> nanti */}
             <span className="logo-text">CNA</span> 
           </div>
 
-          {/* Kanan: Dropdown Edisi */}
           <div className="top-right">
             <span>Edisi: Indonesia</span>
             <FaCaretDown className="dropdown-icon" />
           </div>
         </div>
 
-        {/* Navigasi Utama */}
         <Navbar
           activeCategory={category}
           onCategoryClick={handleCategoryClick}
         />
-        
-        {/* Formulir Pencarian (Kita simpan di sini, tapi mungkin akan disembunyikan/dipindahkan) */}
-        {/* <SearchForm onSearchSubmit={handleSearchSubmit} /> */}
       </header>
 
+      {/* 👇 6. Tampilkan Overlay Pencarian secara kondisional */}
+      {isSearchOpen && (
+        <div className="search-overlay">
+          <div className="search-modal">
+            <button className="close-search-btn" onClick={closeSearch}>
+              <FaTimes />
+            </button>
+            <SearchForm onSearchSubmit={handleSearchSubmit} />
+          </div>
+        </div>
+      )}
+
+      {/* (Sisa kode main, aside, section, dll. tidak berubah) */}
       <main className="main-content-layout">
-        {/* Kolom Kiri: Berita Terbaru */}
         <aside className="sidebar-left">
           <h2 className="section-title">Terbaru</h2>
-          {/* Untuk sekarang, ini akan kosong atau menampilkan ArticleList sederhana */}
           {loading && <p>Loading latest...</p>}
           {error && <p>Error loading latest: {error}</p>}
           {!loading && !error && articles.slice(0, 3).map((article, index) => (
@@ -150,7 +166,6 @@ function App() {
           ))}
         </aside>
 
-        {/* Kolom Tengah: Berita Utama Besar */}
         <section className="main-article-section">
           {loading && <p>Loading main article...</p>}
           {error && <p>Error loading main: {error}</p>}
@@ -158,15 +173,14 @@ function App() {
             <div className="main-hero-article">
               <img src={articles[0].urlToImage || '/placeholder.png'} alt={articles[0].title} className="hero-image" />
               <div className="hero-content">
-                <span className="hero-category">Asia</span> {/* Placeholder */}
+                <span className="hero-category">Asia</span>
                 <h2 className="hero-title">{articles[0].title}</h2>
-                <p className="hero-time">satu hari yang lalu</p> {/* Placeholder */}
+                <p className="hero-time">satu hari yang lalu</p>
               </div>
             </div>
           )}
         </section>
 
-        {/* Kolom Kanan: Berita Samping dengan Gambar */}
         <aside className="sidebar-right">
           {loading && <p>Loading sidebar...</p>}
           {error && <p>Error loading sidebar: {error}</p>}
@@ -174,16 +188,15 @@ function App() {
             <div key={article.url + index} className="sidebar-news-item">
               <img src={article.urlToImage || '/placeholder.png'} alt={article.title} className="sidebar-item-image" />
               <div className="sidebar-item-content">
-                <span className="sidebar-item-category">Lifestyle</span> {/* Placeholder */}
+                <span className="sidebar-item-category">Lifestyle</span>
                 <h4 className="sidebar-item-title">{article.title}</h4>
-                <p className="sidebar-item-time">22 jam yang lalu</p> {/* Placeholder */}
+                <p className="sidebar-item-time">22 jam yang lalu</p>
               </div>
             </div>
           ))}
         </aside>
       </main>
 
-      {/* Pagination (kita mungkin akan mengubah posisi/gayanya nanti) */}
       {!loading && !error && articles.length > 0 && (
         <Pagination
           currentPage={page}

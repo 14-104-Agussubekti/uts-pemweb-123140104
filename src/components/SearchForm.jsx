@@ -1,13 +1,12 @@
 import { useState } from 'react';
 
+// Form ini sekarang akan ada di dalam modal
 const SearchForm = ({ onSearchSubmit }) => {
-  // State lokal untuk input form
   const [localQuery, setLocalQuery] = useState('');
   const [localDate, setLocalDate] = useState('');
   const [localLang, setLocalLang] = useState('en');
   const [localCountry, setLocalCountry] = useState('us');
 
-  // Handler untuk submit form
   const handleSubmit = (e) => {
     e.preventDefault();
     onSearchSubmit({
@@ -19,22 +18,26 @@ const SearchForm = ({ onSearchSubmit }) => {
   };
 
   return (
+    // 'search-form' akan kita style ulang agar pas di modal
     <form className="search-form" onSubmit={handleSubmit}>
+      <h2>Pencarian Lanjutan</h2>
+      <p>Cari artikel berdasarkan keyword, tanggal, bahasa, atau negara.</p>
+
       <div className="form-group">
-        <label htmlFor="search-input">Search</label>
+        <label htmlFor="search-input">Keyword</label>
         <input
           id="search-input"
           type="text"
           value={localQuery}
           onChange={(e) => setLocalQuery(e.target.value)}
-          placeholder="Berita apa yang anda cari.."
+          placeholder="Cari artikel..."
           aria-label="Search Keyword"
-          required // Validasi HTML5
+          required
         />
       </div>
 
       <div className="form-group">
-        <label htmlFor="date-input">Tanggal Publikasi</label>
+        <label htmlFor="date-input">Tanggal</label>
         <input
           id="date-input"
           type="date"
@@ -52,8 +55,10 @@ const SearchForm = ({ onSearchSubmit }) => {
           onChange={(e) => setLocalLang(e.target.value)}
           aria-label="Select Language"
         >
-          <option value="id">Indonesia</option>
           <option value="en">English</option>
+          <option value="id">Indonesia</option>
+          <option value="de">German</option>
+          <option value="es">Spanish</option>
         </select>
       </div>
 
@@ -65,13 +70,14 @@ const SearchForm = ({ onSearchSubmit }) => {
           onChange={(e) => setLocalCountry(e.target.value)}
           aria-label="Select Country"
         >
-          <option value="id">Indonesia</option>
           <option value="us">United States</option>
+          <option value="id">Indonesia</option>
           <option value="gb">United Kingdom</option>
+          <option value="au">Australia</option>
         </select>
       </div>
 
-      <button type="submit">Lakukan Pencarian</button>
+      <button type="submit">Cari</button>
     </form>
   );
 };
