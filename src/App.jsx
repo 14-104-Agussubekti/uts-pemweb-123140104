@@ -8,7 +8,6 @@ import Pagination from './components/Pagination';
 // 👇 1. Impor SkeletonCard yang baru kita buat
 import SkeletonCard from './components/SkeletonCard';
 
-// --- PENGATURAN API (NEWSAPI.ORG) ---
 const API_KEY = 'e88f8987481848ad96196d4b4f0856d1';
 const BASE_URL = 'https://newsapi.org/v2/everything';
 const PAGE_SIZE = 12;
@@ -32,7 +31,6 @@ function App() {
   const [modalSearchQuery, setModalSearchQuery] = useState('');
 
   useEffect(() => {
-    // ... (Logika fetchNews Anda tetap sama)
     const fetchNews = async () => {
       setLoading(true); // Set loading ke true SETIAP kali fetch dimulai
       setError(null);
@@ -75,7 +73,6 @@ function App() {
     fetchNews();
   }, [category, query, date, language, page]);
 
-  // (Semua handler Anda tetap sama)
   const handleCategoryClick = (newCategory) => {
     setCategory(newCategory);
     setQuery(''); 
@@ -130,7 +127,6 @@ function App() {
   return (
     <div className="app">
       <header className="main-header">
-        {/* (Header top bar Anda tetap sama) */}
         <div className="header-top-bar">
           <div className="top-left" onClick={openSearch}>
             <FaSearch className="search-icon" />
@@ -159,10 +155,8 @@ function App() {
         />
       </header>
 
-      {/* (Overlay pencarian Anda tetap sama) */}
       {isSearchOpen && (
         <div className="search-overlay-cna">
-          {/* ... (kode overlay pencarian Anda) ... */}
           <div className="search-overlay-header">
             <span className="logo-text-overlay">VoxA</span>
             <button className="search-overlay-close-btn" onClick={closeSearch}>
@@ -242,6 +236,7 @@ function App() {
         </section>
 
         <aside className="sidebar-right">
+<<<<<<< HEAD
           {/* 👇 4. GANTI KONDISI LOADING DI SINI */}
           {loading ? (
             // Tampilkan 3 skeleton card
@@ -264,13 +259,34 @@ function App() {
                     {formatTimeAgo(article.publishedAt)}
                   </p>
                 </div>
+=======
+          {loading && <p>Loading sidebar...</p>}
+          {error && <p>Error loading sidebar: {error}</p>}
+          {!loading && !error && articles.slice(1, 4).map((article, index) => (
+            <div key={article.url + index} className="sidebar-news-item">
+              <img 
+                src={article.urlToImage || '/placeholder.jpg'} 
+                alt={article.title} 
+                className="sidebar-item-image"
+                onError={handleImageError}
+              />
+              <div className="sidebar-item-content">
+                <span className="sidebar-item-category">Lifestyle</span>
+                <h4 className="sidebar-item-title">{article.title}</h4>
+                <p className="sidebar-item-time">
+                  {formatTimeAgo(article.publishedAt)}
+                </p>
+>>>>>>> 055763e542d48a2fb1db93d7cff0019ce57ad20f
               </div>
             ))
           )}
         </aside>
       </main>
 
+<<<<<<< HEAD
       {/* ... (Footer Anda) ... */}
+=======
+>>>>>>> 055763e542d48a2fb1db93d7cff0019ce57ad20f
       <footer>
         <p>&copy; 2025 123140104. VoxA.</p>
       </footer>
