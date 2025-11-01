@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
+// 👇 1. Impor fungsi dari date-fns
+import { formatDistanceToNow } from 'date-fns';
+import { id } from 'date-fns/locale'; // Impor bahasa Indonesia
 import { FaSearch, FaNewspaper, FaCaretDown, FaTimes } from 'react-icons/fa'; 
 import Navbar from './components/Navbar';
-// SearchForm.jsx tidak kita gunakan lagi untuk layout ini
-// import SearchForm from './components/SearchForm'; 
 import ArticleList from './components/ArticleList';
 import Pagination from './components/Pagination';
 
 // --- PENGATURAN API (NEWSAPI.ORG) ---
-const API_KEY = 'e88f8987481848ad96196d4b4f0856d1'; // JANGAN LUPA GANTI INI
+const API_KEY = 'e88f8987481848ad96196d4b4f0856d1';
 const BASE_URL = 'https://newsapi.org/v2/everything';
 const PAGE_SIZE = 12;
 
@@ -74,15 +75,13 @@ function App() {
     fetchNews();
   }, [category, query, date, language, page]);
 
-  // Handler untuk kategori
+  // (Semua handler Anda tetap sama)
   const handleCategoryClick = (newCategory) => {
     setCategory(newCategory);
     setQuery(''); 
     setDate(''); 
     setPage(1); 
   };
-
-  // Handler submit utama
   const handleSearchSubmit = (searchParams) => {
     setQuery(searchParams.query || '');
     setDate(searchParams.date || '');
@@ -93,20 +92,16 @@ function App() {
     setIsSearchOpen(false);
     setModalSearchQuery('');
   };
-  
-  // Handler untuk UI
   const openSearch = () => setIsSearchOpen(true);
   const closeSearch = () => {
     setIsSearchOpen(false);
     setModalSearchQuery('');
   };
-
   const toggleEditionMenu = () => setIsEditionOpen(prev => !prev);
   const handleEditionSelect = (edition) => {
     console.log("Edisi dipilih:", edition);
     setIsEditionOpen(false);
   };
-
   const handleModalSearchSubmit = (e) => {
     e.preventDefault();
     handleSearchSubmit({ query: modalSearchQuery });
@@ -114,40 +109,45 @@ function App() {
   const handleTrendingClick = (topic) => {
     handleSearchSubmit({ query: topic });
   };
-
-  // 👇 1. INI DIA KODE YANG HILANG 👇
-  // Handler ini akan mengganti gambar yang gagal (seperti error CORS)
-  // dengan gambar placeholder lokal Anda.
   const handleImageError = (e) => {
-    e.target.src = '/placeholder.jpg'; // Arahkan ke gambar di folder /public
+    e.target.src = '/placeholder.jpg';
   };
-
-  // (Handler pagination tidak berubah)
   const handlePrevPage = () => setPage((prev) => Math.max(prev - 1, 1));
   const handleNextPage = () => setPage((prev) => Math.min(prev + 1, totalPages));
+
+  // 👇 2. Buat fungsi helper untuk memformat waktu
+  const formatTimeAgo = (dateString) => {
+    if (!dateString) return ''; // Handle jika datanya null
+    try {
+      const date = new Date(dateString);
+      // 'addSuffix: true' -> "yang lalu"
+      // 'locale: id' -> Bahasa Indonesia
+      return formatDistanceToNow(date, { addSuffix: true, locale: id });
+    } catch (error) {
+      console.error("Format tanggal error:", error);
+      return "beberapa waktu lalu"; // Fallback
+    }
+  };
+
 
   return (
     <div className="app">
       <header className="main-header">
+        {/* (Header top bar Anda tetap sama) */}
         <div className="header-top-bar">
           <div className="top-left" onClick={openSearch}>
             <FaSearch className="search-icon" />
             <span className="search-text">Cari Berita</span>
           </div>
-
           <div className="header-logo">
             <span className="logo-text">VoxA</span> 
           </div>
-
           <div className="top-right" onClick={toggleEditionMenu}>
             <span>Edisi: Indonesia</span>
             <FaCaretDown className="dropdown-icon" />
             {isEditionOpen && (
               <div className="edition-dropdown-menu">
-                <div className="edition-item" onClick={() => handleEditionSelect('Singapore')}>Singapore</div>
                 <div className="edition-item active" onClick={() => handleEditionSelect('Indonesia')}>Indonesia</div>
-                <div className="edition-item" onClick={() => handleEditionSelect('Asia')}>Asia</div>
-                <div className="edition-item" onClick={() => handleEditionSelect('US/UK')}>US/UK</div>
               </div>
             )}
           </div>
@@ -159,8 +159,10 @@ function App() {
         />
       </header>
 
+      {/* (Overlay pencarian Anda tetap sama) */}
       {isSearchOpen && (
         <div className="search-overlay-cna">
+          {/* ... (kode overlay pencarian Anda) ... */}
           <div className="search-overlay-header">
             <span className="logo-text-overlay">CNA</span>
             <button className="search-overlay-close-btn" onClick={closeSearch}>
@@ -192,6 +194,7 @@ function App() {
       )}
 
       <main className="main-content-layout">
+        {/* (Sidebar-left Anda tetap sama) */}
         <aside className="sidebar-left">
           <h2 className="section-title">Terbaru</h2>
           {loading && <p>Loading latest...</p>}
@@ -211,7 +214,6 @@ function App() {
           {error && <p>Error loading main: {error}</p>}
           {!loading && !error && articles.length > 0 && (
             <div className="main-hero-article">
-              {/* 👇 2. TAMBAHKAN 'onError' DI SINI */}
               <img 
                 src={articles[0].urlToImage || '/placeholder.jpg'} 
                 alt={articles[0].title} 
@@ -221,7 +223,10 @@ function App() {
               <div className="hero-content">
                 <span className="hero-category">Asia</span>
                 <h2 className="hero-title">{articles[0].title}</h2>
-                <p className="hero-time">satu hari yang lalu</p>
+                {/* 👇 3. Ganti teks hardcoded dengan fungsi */}
+                <p className="hero-time">
+                  {formatTimeAgo(articles[0].publishedAt)}
+                </p>
               </div>
             </div>
           )}
@@ -232,7 +237,6 @@ function App() {
           {error && <p>Error loading sidebar: {error}</p>}
           {!loading && !error && articles.slice(1, 4).map((article, index) => (
             <div key={article.url + index} className="sidebar-news-item">
-              {/* 👇 3. TAMBAHKAN 'onError' DI SINI JUGA */}
               <img 
                 src={article.urlToImage || '/placeholder.jpg'} 
                 alt={article.title} 
@@ -242,7 +246,10 @@ function App() {
               <div className="sidebar-item-content">
                 <span className="sidebar-item-category">Lifestyle</span>
                 <h4 className="sidebar-item-title">{article.title}</h4>
-                <p className="sidebar-item-time">22 jam yang lalu</p>
+                {/* 👇 4. Ganti teks hardcoded dengan fungsi */}
+                <p className="sidebar-item-time">
+                  {formatTimeAgo(article.publishedAt)}
+                </p>
               </div>
             </div>
           ))}
