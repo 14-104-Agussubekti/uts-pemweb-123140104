@@ -18,7 +18,7 @@ Aplikasi ini telah di-deploy menggunakan Vercel dan dapat diakses melalui link b
 ## 📸 Screenshot Aplikasi
 
 <img width="960" height="418" alt="Screenshot 2025-11-01 162228" src="https://github.com/user-attachments/assets/4ad05a95-6e5d-4c8c-ba85-080f2e4103fe" />
-<img width="960" height="418" alt="Screenshot 2025-11-01 162245" src="https://github.com/user-attachments/assets/5f09623e-7326-4f8b-ad8f-d5fd4e67694d" />
+<img width="960" height="415" alt="image" src="https://github.com/user-attachments/assets/5ae51c0f-5c8f-4d20-9e35-6066e9cc2a42" />
 <img width="960" height="419" alt="Screenshot 2025-11-01 162311" src="https://github.com/user-attachments/assets/66e0dcb3-16f6-461d-b5d5-9dc077ac4ffb" />
 
 ---
