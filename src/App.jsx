@@ -5,9 +5,9 @@ import { FaSearch, FaNewspaper, FaCaretDown, FaTimes } from 'react-icons/fa';
 import Navbar from './components/Navbar';
 import ArticleList from './components/ArticleList';
 import Pagination from './components/Pagination';
-// 👇 1. Impor SkeletonCard yang baru kita buat
-import SkeletonCard from './components/SkeletonCard';
+import SkeletonCard from './components/SkeletonCard'; // Impor SkeletonCard
 
+// --- PENGATURAN API (NEWSAPI.ORG) ---
 const API_KEY = 'e88f8987481848ad96196d4b4f0856d1';
 const BASE_URL = 'https://newsapi.org/v2/everything';
 const PAGE_SIZE = 12;
@@ -55,6 +55,7 @@ function App() {
       }
       const url = `${BASE_URL}?${params.toString()}`;
       console.log('Fetching URL (NewsAPI):', url);
+      
       try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -63,6 +64,9 @@ function App() {
         }
         const data = await response.json();
         setArticles(data.articles || []);
+        setTotalPages(Math.ceil(data.totalResults / PAGE_SIZE) || 1);
+      
+      // 👇 PERBAIKAN TYPO ADA DI SINI (tanda '_' dihapus)
       } catch (e) { 
         setError(e.message);
         setArticles([]); 
@@ -73,12 +77,15 @@ function App() {
     fetchNews();
   }, [category, query, date, language, page]);
 
+  // Handler untuk kategori
   const handleCategoryClick = (newCategory) => {
     setCategory(newCategory);
     setQuery(''); 
     setDate(''); 
     setPage(1); 
   };
+
+  // Handler submit utama
   const handleSearchSubmit = (searchParams) => {
     setQuery(searchParams.query || '');
     setDate(searchParams.date || '');
@@ -89,16 +96,20 @@ function App() {
     setIsSearchOpen(false);
     setModalSearchQuery('');
   };
+  
+  // Handler untuk UI
   const openSearch = () => setIsSearchOpen(true);
   const closeSearch = () => {
     setIsSearchOpen(false);
     setModalSearchQuery('');
   };
+
   const toggleEditionMenu = () => setIsEditionOpen(prev => !prev);
   const handleEditionSelect = (edition) => {
     console.log("Edisi dipilih:", edition);
     setIsEditionOpen(false);
   };
+
   const handleModalSearchSubmit = (e) => {
     e.preventDefault();
     handleSearchSubmit({ query: modalSearchQuery });
@@ -106,12 +117,17 @@ function App() {
   const handleTrendingClick = (topic) => {
     handleSearchSubmit({ query: topic });
   };
+
+  // Handler untuk gambar yang error (CORS/Hotlink block)
   const handleImageError = (e) => {
     e.target.src = '/placeholder.jpg';
   };
+
+  // Handler pagination
   const handlePrevPage = () => setPage((prev) => Math.max(prev - 1, 1));
   const handleNextPage = () => setPage((prev) => Math.min(prev + 1, totalPages));
 
+  // Fungsi helper untuk format waktu
   const formatTimeAgo = (dateString) => {
     if (!dateString) return '';
     try {
@@ -140,10 +156,7 @@ function App() {
             <FaCaretDown className="dropdown-icon" />
             {isEditionOpen && (
               <div className="edition-dropdown-menu">
-                <div className="edition-item" onClick={() => handleEditionSelect('Singapore')}>Singapore</div>
                 <div className="edition-item active" onClick={() => handleEditionSelect('Indonesia')}>Indonesia</div>
-                <div className="edition-item" onClick={() => handleEditionSelect('Asia')}>Asia</div>
-                <div className="edition-item" onClick={() => handleEditionSelect('US/UK')}>US/UK</div>
               </div>
             )}
           </div>
@@ -190,9 +203,8 @@ function App() {
       <main className="main-content-layout">
         <aside className="sidebar-left">
           <h2 className="section-title">Terbaru</h2>
-          {/* 👇 2. GANTI KONDISI LOADING DI SINI */}
+          {/* Kondisi Loading untuk Skeleton */ }
           {loading ? (
-            // Tampilkan 3 skeleton card
             [1, 2, 3].map(n => <SkeletonCard key={n} type="latest" />)
           ) : error ? (
             <p className="error-message">{error}</p>
@@ -209,7 +221,7 @@ function App() {
         </aside>
 
         <section className="main-article-section">
-          {/* 👇 3. GANTI KONDISI LOADING DI SINI */}
+          {/* Kondisi Loading untuk Skeleton */ }
           {loading ? (
             <SkeletonCard type="hero" />
           ) : error ? (
@@ -236,10 +248,8 @@ function App() {
         </section>
 
         <aside className="sidebar-right">
-<<<<<<< HEAD
-          {/* 👇 4. GANTI KONDISI LOADING DI SINI */}
+          {/* Kondisi Loading untuk Skeleton */ }
           {loading ? (
-            // Tampilkan 3 skeleton card
             [1, 2, 3].map(n => <SkeletonCard key={n} type="sidebar" />)
           ) : error ? (
             <p className="error-message">{error}</p>
@@ -259,36 +269,25 @@ function App() {
                     {formatTimeAgo(article.publishedAt)}
                   </p>
                 </div>
-=======
-          {loading && <p>Loading sidebar...</p>}
-          {error && <p>Error loading sidebar: {error}</p>}
-          {!loading && !error && articles.slice(1, 4).map((article, index) => (
-            <div key={article.url + index} className="sidebar-news-item">
-              <img 
-                src={article.urlToImage || '/placeholder.jpg'} 
-                alt={article.title} 
-                className="sidebar-item-image"
-                onError={handleImageError}
-              />
-              <div className="sidebar-item-content">
-                <span className="sidebar-item-category">Lifestyle</span>
-                <h4 className="sidebar-item-title">{article.title}</h4>
-                <p className="sidebar-item-time">
-                  {formatTimeAgo(article.publishedAt)}
-                </p>
->>>>>>> 055763e542d48a2fb1db93d7cff0019ce57ad20f
               </div>
             ))
           )}
         </aside>
       </main>
 
-<<<<<<< HEAD
-      {/* ... (Footer Anda) ... */}
-=======
->>>>>>> 055763e542d48a2fb1db93d7cff0019ce57ad20f
+      {/* Pagination (kita mungkin perlu menyembunyikannya) */}
+      {/* {!loading && !error && articles.length > 0 && (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPrevPage={handlePrevPage}
+          onNextPage={handleNextPage}
+        />
+      )}
+      */}
+
       <footer>
-        <p>&copy; 2025 123140104. VoxA.</p>
+        <p>&copy; 2025 News Portal. Dibuat dengan React & Vite.</p>
       </footer>
     </div>
   );
