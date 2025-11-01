@@ -515,3 +515,121 @@ footer {
     font-size: 1.2rem;
   }
 }
+
+/* --- Interaksi & Transisi --- */
+/* Menambahkan transisi 'lift' pada hover untuk kartu-kartu */
+
+.main-hero-article,
+.sidebar-news-item,
+.latest-news-item a {
+  /* Menambahkan transisi agar mulus */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.main-hero-article:hover {
+  transform: translateY(-5px); /* Efek 'lift' */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); /* Bayangan lebih besar */
+}
+
+.sidebar-news-item:hover,
+.latest-news-item a:hover {
+  transform: translateX(4px); /* Bergeser sedikit ke kanan */
+}
+
+
+/* --- Skeleton Loader Styles --- */
+
+/* Base untuk semua skeleton */
+.skeleton-card {
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  overflow: hidden; /* Penting untuk animasi shimmer */
+}
+
+/* Base untuk elemen skeleton */
+.skeleton-image,
+.skeleton-image-small,
+.skeleton-text {
+  background-color: var(--secondary-bg-dark); /* Warna dasar skeleton */
+}
+
+.skeleton-text {
+  height: 1.2rem;
+  margin-bottom: 0.75rem;
+  border-radius: 4px;
+}
+.skeleton-text.short { width: 40%; }
+.skeleton-text.medium { width: 70%; }
+.skeleton-text.long { width: 100%; }
+
+
+/* Skeleton untuk Hero (Tengah) */
+.hero-skeleton {
+  background-color: var(--secondary-bg-dark);
+  border: 1px solid var(--accent-secondary);
+}
+.hero-skeleton .skeleton-image {
+  width: 100%;
+  height: 300px;
+}
+.hero-skeleton .skeleton-content {
+  padding: 1.5rem;
+}
+
+/* Skeleton untuk Sidebar Kanan */
+.sidebar-skeleton {
+  display: flex;
+  gap: 0.8rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--accent-secondary);
+}
+.sidebar-skeleton .skeleton-image-small {
+  width: 100px;
+  height: 70px;
+  border-radius: 4px;
+  flex-shrink: 0; /* Mencegah gambar mengecil */
+}
+.sidebar-skeleton .skeleton-content {
+  flex-grow: 1;
+  padding-top: 0.25rem;
+}
+
+/* Skeleton untuk Sidebar Kiri */
+.latest-skeleton {
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--accent-secondary);
+}
+
+
+/* --- Animasi Shimmer --- */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 150%;
+  height: 100%;
+  /* Gradient yang akan bergerak */
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(66, 71, 105, 0.5) 50%, /* (var(--accent-secondary) dengan transparansi) */
+    transparent 100%
+  );
+  animation: shimmer-animation 1.5s infinite linear;
+}
+
+@keyframes shimmer-animation {
+  0% {
+    left: -150%;
+  }
+  100% {
+    left: 150%;
+  }
+}

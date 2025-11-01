@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-// 👇 1. Impor fungsi dari date-fns
 import { formatDistanceToNow } from 'date-fns';
-import { id } from 'date-fns/locale'; // Impor bahasa Indonesia
+import { id } from 'date-fns/locale';
 import { FaSearch, FaNewspaper, FaCaretDown, FaTimes } from 'react-icons/fa'; 
 import Navbar from './components/Navbar';
 import ArticleList from './components/ArticleList';
 import Pagination from './components/Pagination';
+// 👇 1. Impor SkeletonCard yang baru kita buat
+import SkeletonCard from './components/SkeletonCard';
 
 // --- PENGATURAN API (NEWSAPI.ORG) ---
 const API_KEY = 'e88f8987481848ad96196d4b4f0856d1';
@@ -14,7 +15,7 @@ const PAGE_SIZE = 12;
 
 function App() {
   const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Pastikan ini 'true' saat awal
   const [error, setError] = useState(null);
 
   const [category, setCategory] = useState('');
@@ -33,7 +34,7 @@ function App() {
   useEffect(() => {
     // ... (Logika fetchNews Anda tetap sama)
     const fetchNews = async () => {
-      setLoading(true);
+      setLoading(true); // Set loading ke true SETIAP kali fetch dimulai
       setError(null);
       const params = new URLSearchParams({
         apikey: API_KEY,
@@ -64,8 +65,7 @@ function App() {
         }
         const data = await response.json();
         setArticles(data.articles || []);
-        setTotalPages(Math.ceil(data.totalResults / PAGE_SIZE) || 1);
-      } catch (e) {
+      } catch (e) { 
         setError(e.message);
         setArticles([]); 
       } finally {
@@ -115,17 +115,14 @@ function App() {
   const handlePrevPage = () => setPage((prev) => Math.max(prev - 1, 1));
   const handleNextPage = () => setPage((prev) => Math.min(prev + 1, totalPages));
 
-  // 👇 2. Buat fungsi helper untuk memformat waktu
   const formatTimeAgo = (dateString) => {
-    if (!dateString) return ''; // Handle jika datanya null
+    if (!dateString) return '';
     try {
       const date = new Date(dateString);
-      // 'addSuffix: true' -> "yang lalu"
-      // 'locale: id' -> Bahasa Indonesia
       return formatDistanceToNow(date, { addSuffix: true, locale: id });
     } catch (error) {
       console.error("Format tanggal error:", error);
-      return "beberapa waktu lalu"; // Fallback
+      return "beberapa waktu lalu";
     }
   };
 
@@ -147,7 +144,10 @@ function App() {
             <FaCaretDown className="dropdown-icon" />
             {isEditionOpen && (
               <div className="edition-dropdown-menu">
+                <div className="edition-item" onClick={() => handleEditionSelect('Singapore')}>Singapore</div>
                 <div className="edition-item active" onClick={() => handleEditionSelect('Indonesia')}>Indonesia</div>
+                <div className="edition-item" onClick={() => handleEditionSelect('Asia')}>Asia</div>
+                <div className="edition-item" onClick={() => handleEditionSelect('US/UK')}>US/UK</div>
               </div>
             )}
           </div>
@@ -194,79 +194,83 @@ function App() {
       )}
 
       <main className="main-content-layout">
-        {/* (Sidebar-left Anda tetap sama) */}
         <aside className="sidebar-left">
           <h2 className="section-title">Terbaru</h2>
-          {loading && <p>Loading latest...</p>}
-          {error && <p>Error loading latest: {error}</p>}
-          {!loading && !error && articles.slice(0, 3).map((article, index) => (
-            <div key={article.url + index} className="latest-news-item">
-              <a href={article.url} target="_blank" rel="noopener noreferrer">
-                <h4 className="latest-news-title">{article.title}</h4>
-                <p className="latest-news-source">{article.source.name}</p>
-              </a>
-            </div>
-          ))}
+          {/* 👇 2. GANTI KONDISI LOADING DI SINI */}
+          {loading ? (
+            // Tampilkan 3 skeleton card
+            [1, 2, 3].map(n => <SkeletonCard key={n} type="latest" />)
+          ) : error ? (
+            <p className="error-message">{error}</p>
+          ) : (
+            articles.slice(0, 3).map((article, index) => (
+              <div key={article.url + index} className="latest-news-item">
+                <a href={article.url} target="_blank" rel="noopener noreferrer">
+                  <h4 className="latest-news-title">{article.title}</h4>
+                  <p className="latest-news-source">{article.source.name}</p>
+                </a>
+              </div>
+            ))
+          )}
         </aside>
 
         <section className="main-article-section">
-          {loading && <p>Loading main article...</p>}
-          {error && <p>Error loading main: {error}</p>}
-          {!loading && !error && articles.length > 0 && (
-            <div className="main-hero-article">
-              <img 
-                src={articles[0].urlToImage || '/placeholder.jpg'} 
-                alt={articles[0].title} 
-                className="hero-image"
-                onError={handleImageError} 
-              />
-              <div className="hero-content">
-                <span className="hero-category">Asia</span>
-                <h2 className="hero-title">{articles[0].title}</h2>
-                {/* 👇 3. Ganti teks hardcoded dengan fungsi */}
-                <p className="hero-time">
-                  {formatTimeAgo(articles[0].publishedAt)}
-                </p>
+          {/* 👇 3. GANTI KONDISI LOADING DI SINI */}
+          {loading ? (
+            <SkeletonCard type="hero" />
+          ) : error ? (
+            <p className="error-message">{error}</p>
+          ) : (
+            articles.length > 0 && (
+              <div className="main-hero-article">
+                <img 
+                  src={articles[0].urlToImage || '/placeholder.jpg'} 
+                  alt={articles[0].title} 
+                  className="hero-image"
+                  onError={handleImageError} 
+                />
+                <div className="hero-content">
+                  <span className="hero-category">Asia</span>
+                  <h2 className="hero-title">{articles[0].title}</h2>
+                  <p className="hero-time">
+                    {formatTimeAgo(articles[0].publishedAt)}
+                  </p>
+                </div>
               </div>
-            </div>
+            )
           )}
         </section>
 
         <aside className="sidebar-right">
-          {loading && <p>Loading sidebar...</p>}
-          {error && <p>Error loading sidebar: {error}</p>}
-          {!loading && !error && articles.slice(1, 4).map((article, index) => (
-            <div key={article.url + index} className="sidebar-news-item">
-              <img 
-                src={article.urlToImage || '/placeholder.jpg'} 
-                alt={article.title} 
-                className="sidebar-item-image"
-                onError={handleImageError}
-              />
-              <div className="sidebar-item-content">
-                <span className="sidebar-item-category">Lifestyle</span>
-                <h4 className="sidebar-item-title">{article.title}</h4>
-                {/* 👇 4. Ganti teks hardcoded dengan fungsi */}
-                <p className="sidebar-item-time">
-                  {formatTimeAgo(article.publishedAt)}
-                </p>
+          {/* 👇 4. GANTI KONDISI LOADING DI SINI */}
+          {loading ? (
+            // Tampilkan 3 skeleton card
+            [1, 2, 3].map(n => <SkeletonCard key={n} type="sidebar" />)
+          ) : error ? (
+            <p className="error-message">{error}</p>
+          ) : (
+            articles.slice(1, 4).map((article, index) => (
+              <div key={article.url + index} className="sidebar-news-item">
+                <img 
+                  src={article.urlToImage || '/placeholder.jpg'} 
+                  alt={article.title} 
+                  className="sidebar-item-image"
+                  onError={handleImageError}
+                />
+                <div className="sidebar-item-content">
+                  <span className="sidebar-item-category">Lifestyle</span>
+                  <h4 className="sidebar-item-title">{article.title}</h4>
+                  <p className="sidebar-item-time">
+                    {formatTimeAgo(article.publishedAt)}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </aside>
       </main>
 
-      {/* Pagination (kita mungkin perlu menyembunyikannya) */}
-      {/* {!loading && !error && articles.length > 0 && (
-        <Pagination
-          currentPage={page}
-          totalPages={totalPages}
-          onPrevPage={handlePrevPage}
-          onNextPage={handleNextPage}
-        />
-      )}
-      */}
-
+      {/* ... (Footer Anda) ... */}
       <footer>
         <p>&copy; 2025 123140104. VoxA.</p>
       </footer>
