@@ -356,42 +356,6 @@ footer {
 
 /* --- Search Overlay & Modal --- */
 
-.search-overlay {
-  position: fixed; /* Tampil di atas segalanya */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.85); /* Latar belakang gelap transparan */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; /* Pastikan di atas konten lain */
-  animation: fadeIn 0.3s ease-out;
-}
-
-.search-modal {
-  background-color: var(--cna-bg-light); /* Latar putih */
-  padding: 2.5rem;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 600px;
-  position: relative;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  animation: slideIn 0.3s ease-out;
-}
-
-.close-search-btn {
-  position: absolute;
-  top: 1rem;
-  right: 1.5rem;
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  color: var(--cna-text-light);
-  cursor: pointer;
-  transition: color 0.2s;
-}
 
 .close-search-btn:hover {
   color: var(--cna-text-dark);
@@ -489,4 +453,150 @@ footer {
 @keyframes slideIn {
   from { transform: translateY(-30px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
+}
+
+/* --- Hapus atau Ganti Style Overlay Lama --- */
+/* Hapus .search-overlay, .search-modal, .close-search-btn, dan style ulang .search-form */
+
+
+/* --- Dropdown Edisi --- */
+.top-right {
+  position: relative; /* Diperlukan agar dropdown bisa diposisikan */
+  cursor: pointer;
+}
+
+.edition-dropdown-menu {
+  position: absolute;
+  top: 120%; /* Posisikan di bawah elemen Edisi */
+  right: 0;
+  background-color: var(--cna-bg-light);
+  border: 1px solid var(--cna-border);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 150px;
+  z-index: 100;
+  animation: fadeIn 0.2s ease-out; /* Gunakan animasi yang sudah ada */
+}
+
+.edition-item {
+  padding: 0.8rem 1.2rem;
+  font-size: 0.95rem;
+  color: var(--cna-text-dark);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.edition-item:hover {
+  background-color: var(--cna-bg-highlight);
+}
+
+.edition-item.active {
+  color: var(--cna-red);
+  font-weight: bold;
+}
+
+
+/* --- Overlay Pencarian CNA Baru --- */
+.search-overlay-cna {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--cna-bg-light); /* Latar belakang putih solid */
+  z-index: 1000;
+  padding: 2rem 3rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.search-overlay-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.logo-text-overlay {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--cna-red);
+}
+
+.search-overlay-close-btn {
+  background: none;
+  border: none;
+  font-size: 2.2rem;
+  color: var(--cna-text-dark);
+  cursor: pointer;
+}
+
+.search-overlay-content {
+  max-width: 800px;
+  margin: 0 auto; /* Pusatkan konten pencarian */
+}
+
+.cna-search-form {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid var(--cna-text-dark);
+  margin-bottom: 2rem;
+}
+
+.cna-search-submit-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--cna-text-medium);
+  padding: 0.5rem;
+  cursor: default;
+}
+
+.cna-search-input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  font-size: 1.5rem; /* Input teks besar */
+  padding: 0.5rem;
+  color: var(--cna-text-dark);
+  font-family: var(--font-family-main);
+}
+
+.cna-search-input::placeholder {
+  color: var(--cna-text-light);
+}
+
+.trending-topics-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.trending-title {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--cna-text-medium);
+}
+
+.trending-topic-btn {
+  background: none;
+  border: 1px solid var(--cna-border);
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: var(--cna-text-dark);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.trending-topic-btn:hover {
+  background-color: var(--cna-bg-highlight);
+  border-color: var(--cna-text-dark);
+}
+
+/* --- Animasi --- */
+/* Anda seharusnya sudah punya ini, tapi pastikan ada */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

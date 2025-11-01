@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
-// 👇 1. Tambahkan FaSearch, FaCaretDown, dan FaTimes (untuk tombol close)
 import { FaSearch, FaNewspaper, FaCaretDown, FaTimes } from 'react-icons/fa'; 
 import Navbar from './components/Navbar';
-import SearchForm from './components/SearchForm';
+// SearchForm.jsx tidak kita gunakan lagi untuk layout ini
+// import SearchForm from './components/SearchForm'; 
 import ArticleList from './components/ArticleList';
 import Pagination from './components/Pagination';
 
 // --- PENGATURAN API (NEWSAPI.ORG) ---
-const API_KEY = 'e88f8987481848ad96196d4b4f0856d1';
+const API_KEY = 'e88f8987481848ad96196d4b4f0856d1'; // JANGAN LUPA GANTI INI
 const BASE_URL = 'https://newsapi.org/v2/everything';
 const PAGE_SIZE = 12;
 
@@ -25,20 +25,20 @@ function App() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  // 👇 2. State baru untuk mengontrol overlay pencarian
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isEditionOpen, setIsEditionOpen] = useState(false);
+  const [modalSearchQuery, setModalSearchQuery] = useState('');
 
   useEffect(() => {
+    // ... (Logika fetchNews Anda tetap sama)
     const fetchNews = async () => {
       setLoading(true);
       setError(null);
-
       const params = new URLSearchParams({
         apikey: API_KEY,
         page: page,
         pageSize: PAGE_SIZE,
       });
-
       if (query) {
         params.append('q', query);
       } else if (category) {
@@ -46,7 +46,6 @@ function App() {
       } else {
         params.append('q', 'berita'); 
       }
-      
       if (date) {
         params.append('from', date);
         params.append('to', date);
@@ -54,10 +53,8 @@ function App() {
       if (language) {
         params.append('language', language);
       }
-
       const url = `${BASE_URL}?${params.toString()}`;
       console.log('Fetching URL (NewsAPI):', url);
-
       try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -65,10 +62,8 @@ function App() {
           throw new Error(`HTTP error! status: ${response.status} (${errorData.message})`);
         }
         const data = await response.json();
-
         setArticles(data.articles || []);
         setTotalPages(Math.ceil(data.totalResults / PAGE_SIZE) || 1);
-        
       } catch (e) {
         setError(e.message);
         setArticles([]); 
@@ -76,10 +71,10 @@ function App() {
         setLoading(false);
       }
     };
-
     fetchNews();
   }, [category, query, date, language, page]);
 
+  // Handler untuk kategori
   const handleCategoryClick = (newCategory) => {
     setCategory(newCategory);
     setQuery(''); 
@@ -87,48 +82,74 @@ function App() {
     setPage(1); 
   };
 
-  // 👇 3. Modifikasi handleSearchSubmit
-  const handleSearchSubmit = (filters) => {
-    setQuery(filters.query);
-    setDate(filters.date);
-    setLanguage(filters.language);
-    setCountry(filters.country); 
+  // Handler submit utama
+  const handleSearchSubmit = (searchParams) => {
+    setQuery(searchParams.query || '');
+    setDate(searchParams.date || '');
+    setLanguage(searchParams.language || 'en');
+    setCountry(searchParams.country || 'us');
     setCategory(''); 
     setPage(1);
-    setIsSearchOpen(false); // Tutup overlay setelah mencari
+    setIsSearchOpen(false);
+    setModalSearchQuery('');
   };
   
-  // 👇 4. Fungsi untuk membuka dan menutup pencarian
+  // Handler untuk UI
   const openSearch = () => setIsSearchOpen(true);
-  const closeSearch = () => setIsSearchOpen(false);
+  const closeSearch = () => {
+    setIsSearchOpen(false);
+    setModalSearchQuery('');
+  };
+
+  const toggleEditionMenu = () => setIsEditionOpen(prev => !prev);
+  const handleEditionSelect = (edition) => {
+    console.log("Edisi dipilih:", edition);
+    setIsEditionOpen(false);
+  };
+
+  const handleModalSearchSubmit = (e) => {
+    e.preventDefault();
+    handleSearchSubmit({ query: modalSearchQuery });
+  };
+  const handleTrendingClick = (topic) => {
+    handleSearchSubmit({ query: topic });
+  };
+
+  // 👇 1. INI DIA KODE YANG HILANG 👇
+  // Handler ini akan mengganti gambar yang gagal (seperti error CORS)
+  // dengan gambar placeholder lokal Anda.
+  const handleImageError = (e) => {
+    e.target.src = '/placeholder.jpg'; // Arahkan ke gambar di folder /public
+  };
 
   // (Handler pagination tidak berubah)
-  const handlePrevPage = () => {
-    setPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setPage((prevPage) => Math.min(prevPage + 1, totalPages));
-  };
-
+  const handlePrevPage = () => setPage((prev) => Math.max(prev - 1, 1));
+  const handleNextPage = () => setPage((prev) => Math.min(prev + 1, totalPages));
 
   return (
     <div className="app">
       <header className="main-header">
         <div className="header-top-bar">
-          {/* 👇 5. Tambahkan onClick untuk membuka pencarian */}
           <div className="top-left" onClick={openSearch}>
             <FaSearch className="search-icon" />
             <span className="search-text">Cari Berita</span>
           </div>
 
           <div className="header-logo">
-            <span className="logo-text">CNA</span> 
+            <span className="logo-text">VoxA</span> 
           </div>
 
-          <div className="top-right">
+          <div className="top-right" onClick={toggleEditionMenu}>
             <span>Edisi: Indonesia</span>
             <FaCaretDown className="dropdown-icon" />
+            {isEditionOpen && (
+              <div className="edition-dropdown-menu">
+                <div className="edition-item" onClick={() => handleEditionSelect('Singapore')}>Singapore</div>
+                <div className="edition-item active" onClick={() => handleEditionSelect('Indonesia')}>Indonesia</div>
+                <div className="edition-item" onClick={() => handleEditionSelect('Asia')}>Asia</div>
+                <div className="edition-item" onClick={() => handleEditionSelect('US/UK')}>US/UK</div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -138,19 +159,38 @@ function App() {
         />
       </header>
 
-      {/* 👇 6. Tampilkan Overlay Pencarian secara kondisional */}
       {isSearchOpen && (
-        <div className="search-overlay">
-          <div className="search-modal">
-            <button className="close-search-btn" onClick={closeSearch}>
+        <div className="search-overlay-cna">
+          <div className="search-overlay-header">
+            <span className="logo-text-overlay">CNA</span>
+            <button className="search-overlay-close-btn" onClick={closeSearch}>
               <FaTimes />
             </button>
-            <SearchForm onSearchSubmit={handleSearchSubmit} />
+          </div>
+          <div className="search-overlay-content">
+            <form className="cna-search-form" onSubmit={handleModalSearchSubmit}>
+              <button type="submit" className="cna-search-submit-btn">
+                <FaSearch />
+              </button>
+              <input
+                type="text"
+                className="cna-search-input"
+                placeholder="Masukkan kata kunci, topik dan lainnya"
+                value={modalSearchQuery}
+                onChange={(e) => setModalSearchQuery(e.target.value)}
+                autoFocus
+              />
+            </form>
+            <div className="trending-topics-container">
+              <span className="trending-title">Topik Trending</span>
+              <button className="trending-topic-btn" onClick={() => handleTrendingClick('Indonesia')}>Indonesia</button>
+              <button className="trending-topic-btn" onClick={() => handleTrendingClick('China')}>China</button>
+              <button className="trending-topic-btn" onClick={() => handleTrendingClick('Malaysia')}>Malaysia</button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* (Sisa kode main, aside, section, dll. tidak berubah) */}
       <main className="main-content-layout">
         <aside className="sidebar-left">
           <h2 className="section-title">Terbaru</h2>
@@ -171,7 +211,13 @@ function App() {
           {error && <p>Error loading main: {error}</p>}
           {!loading && !error && articles.length > 0 && (
             <div className="main-hero-article">
-              <img src={articles[0].urlToImage || '/placeholder.png'} alt={articles[0].title} className="hero-image" />
+              {/* 👇 2. TAMBAHKAN 'onError' DI SINI */}
+              <img 
+                src={articles[0].urlToImage || '/placeholder.jpg'} 
+                alt={articles[0].title} 
+                className="hero-image"
+                onError={handleImageError} 
+              />
               <div className="hero-content">
                 <span className="hero-category">Asia</span>
                 <h2 className="hero-title">{articles[0].title}</h2>
@@ -186,7 +232,13 @@ function App() {
           {error && <p>Error loading sidebar: {error}</p>}
           {!loading && !error && articles.slice(1, 4).map((article, index) => (
             <div key={article.url + index} className="sidebar-news-item">
-              <img src={article.urlToImage || '/placeholder.png'} alt={article.title} className="sidebar-item-image" />
+              {/* 👇 3. TAMBAHKAN 'onError' DI SINI JUGA */}
+              <img 
+                src={article.urlToImage || '/placeholder.jpg'} 
+                alt={article.title} 
+                className="sidebar-item-image"
+                onError={handleImageError}
+              />
               <div className="sidebar-item-content">
                 <span className="sidebar-item-category">Lifestyle</span>
                 <h4 className="sidebar-item-title">{article.title}</h4>
@@ -197,7 +249,8 @@ function App() {
         </aside>
       </main>
 
-      {!loading && !error && articles.length > 0 && (
+      {/* Pagination (kita mungkin perlu menyembunyikannya) */}
+      {/* {!loading && !error && articles.length > 0 && (
         <Pagination
           currentPage={page}
           totalPages={totalPages}
@@ -205,9 +258,10 @@ function App() {
           onNextPage={handleNextPage}
         />
       )}
+      */}
 
       <footer>
-        <p>&copy; 2025 News Portal. Dibuat dengan React & Vite.</p>
+        <p>&copy; 2025 123140104. VoxA.</p>
       </footer>
     </div>
   );
