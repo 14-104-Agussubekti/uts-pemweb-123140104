@@ -1,18 +1,14 @@
-/* --- Global & Reset --- */
 :root {
-  /* Palet Warna Baru (Elegant Dark Mode) */
-  --primary-bg-dark: #1A1A2E;     /* Deep Navy / Midnight Blue */
-  --secondary-bg-dark: #252A4A;  /* Darker Royal Blue / Charcoal */
-  --text-light: #E0E0E0;         /* Off-White / Light Gray */
-  --text-medium: #A0A0B0;        /* Soft Silver */
-  --text-accent: #90CAF9;        /* Light Blue (untuk hover) */
-  --accent-primary: #64B5F6;     /* Medium Sky Blue (Tombol, Aksen Utama) */
-  --accent-secondary: #424769;   /* Dark Gray-Blue (Batas, Garis) */
+  --primary-bg-dark: #1A1A2E;     
+  --secondary-bg-dark: #252A4A;  
+  --text-light: #E0E0E0;         
+  --text-medium: #A0A0B0;        
+  --text-accent: #90CAF9;        
+  --accent-primary: #64B5F6;     
+  --accent-secondary: #424769;   
   
-  /* Font baru yang lebih modern */
   --font-family-main: 'Roboto', 'Open Sans', 'Lato', sans-serif;
-  
-  /* Bayangan baru untuk dark mode */
+
   --shadow-dark: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
@@ -23,9 +19,8 @@
 }
 
 body {
-  font-family: var(--font-family-main); /* Menerapkan font baru */
+  font-family: var(--font-family-main); 
   line-height: 1.6;
-  /* Menerapkan warna latar utama dan teks utama */
   background-color: var(--primary-bg-dark);
   color: var(--text-light);
 }
@@ -38,7 +33,7 @@ body {
 
 /* --- Main Header Layout --- */
 .main-header {
-  background: var(--primary-bg-dark); /* Header menyatu dengan BG */
+  background: var(--primary-bg-dark);
   padding: 1rem 0;
   margin-bottom: 1.5rem;
   border-bottom: 1px solid var(--accent-secondary);
@@ -58,11 +53,11 @@ body {
   gap: 0.5rem;
   color: var(--text-medium);
   font-size: 0.9rem;
-  cursor: pointer; /* Menandakan bisa diklik */
+  cursor: pointer; 
 }
 
 .top-left:hover, .top-right:hover {
-  color: var(--text-accent); /* Hover dengan aksen biru */
+  color: var(--text-accent); 
 }
 
 .search-icon, .dropdown-icon {
@@ -77,7 +72,7 @@ body {
 .logo-text {
   font-size: 2.5rem;
   font-weight: 900;
-  color: var(--accent-primary); /* Logo menggunakan aksen biru */
+  color: var(--accent-primary); 
 }
 
 /* --- Navbar (Main Navigation) --- */
@@ -96,16 +91,16 @@ body {
   cursor: pointer;
   font-weight: 600;
   transition: all 0.2s ease;
-  color: var(--text-light); /* Teks terang */
+  color: var(--text-light); 
   position: relative;
 }
 
 #navbar button:hover {
-  color: var(--text-accent); /* Aksen biru saat hover */
+  color: var(--text-accent); 
 }
 
 #navbar button.active {
-  color: var(--accent-primary); /* Aksen biru utama saat aktif */
+  color: var(--accent-primary); 
 }
 
 #navbar button.active::after {
@@ -115,7 +110,7 @@ body {
   bottom: -5px;
   width: 100%;
   height: 2px;
-  background-color: var(--accent-primary); /* Garis bawah biru */
+  background-color: var(--accent-primary); 
 }
 
 
@@ -133,14 +128,14 @@ body {
   color: var(--text-light);
   margin-bottom: 1rem;
   padding-left: 0.5rem;
-  border-left: 4px solid var(--accent-primary); /* Garis aksen biru */
+  border-left: 4px solid var(--accent-primary); 
 }
 
 
 /* --- Sidebar Left: Terbaru --- */
 .sidebar-left {
   padding-right: 1rem;
-  border-right: 1px solid var(--accent-secondary); /* Garis batas */
+  border-right: 1px solid var(--accent-secondary); 
 }
 
 .latest-news-item {
@@ -169,12 +164,12 @@ body {
 
 .latest-news-source {
   font-size: 0.8rem;
-  color: var(--text-medium); /* Silver */
+  color: var(--text-medium); 
 }
 
 /* --- Main Article Section (Kolom Tengah) --- */
 .main-article-section {
-  background-color: var(--secondary-bg-dark); /* Latar card */
+  background-color: var(--secondary-bg-dark); 
   color: var(--text-light);
   border-radius: 8px;
   overflow: hidden;
@@ -193,7 +188,7 @@ body {
   height: 300px;
   object-fit: cover;
   display: block;
-  border-bottom: 1px solid var(--accent-secondary); /* Garis batas */
+  border-bottom: 1px solid var(--accent-secondary); 
 }
 
 .main-hero-article .hero-content {
@@ -207,7 +202,7 @@ body {
 
 .main-hero-article .hero-category {
   /* Kategori dengan aksen biru */
-  background-color: rgba(144, 202, 249, 0.1); /* Biru transparan */
+  background-color: rgba(144, 202, 249, 0.1); 
   color: var(--text-accent);
   padding: 0.3rem 0.8rem;
   border-radius: 4px;
@@ -294,7 +289,7 @@ body {
   position: absolute;
   top: 120%;
   right: 0;
-  background-color: var(--secondary-bg-dark); /* Latar card */
+  background-color: var(--secondary-bg-dark); 
   border: 1px solid var(--accent-secondary);
   border-radius: 4px;
   box-shadow: var(--shadow-dark);
@@ -312,16 +307,15 @@ body {
 }
 
 .edition-item:hover {
-  background-color: var(--primary-bg-dark); /* Latar utama saat hover */
+  background-color: var(--primary-bg-dark); 
 }
 
 .edition-item.active {
-  color: var(--accent-primary); /* Biru aksen */
+  color: var(--accent-primary); 
   font-weight: bold;
 }
 
 
-/* --- Overlay Pencarian CNA Baru --- */
 .search-overlay-cna {
   position: fixed;
   top: 0;
@@ -333,7 +327,7 @@ body {
   z-index: 1000;
   padding: 2rem 3rem;
   animation: fadeIn 0.3s ease-out;
-  backdrop-filter: blur(5px); /* Efek blur (opsional) */
+  backdrop-filter: blur(5px); 
 }
 
 .search-overlay-header {
@@ -437,8 +431,41 @@ footer {
   color: var(--text-medium);
 }
 
+/* --- Pagination --- */
 .pagination {
-  display: none; /* Tetap sembunyikan pagination */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--accent-secondary);
+}
+
+.pagination span {
+  font-size: 0.9rem;
+  color: var(--text-medium);
+}
+
+.pagination button {
+  padding: 0.6rem 1.2rem;
+  background-color: var(--accent-primary);
+  color: var(--primary-bg-dark); /* Teks gelap di atas tombol biru */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: var(--text-accent);
+}
+
+.pagination button:disabled {
+  background-color: var(--accent-secondary); /* Warna nonaktif */
+  color: var(--text-medium);
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .loading-message,
@@ -516,41 +543,37 @@ footer {
   }
 }
 
-/* --- Interaksi & Transisi --- */
-/* Menambahkan transisi 'lift' pada hover untuk kartu-kartu */
 
 .main-hero-article,
 .sidebar-news-item,
 .latest-news-item a {
-  /* Menambahkan transisi agar mulus */
+
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .main-hero-article:hover {
-  transform: translateY(-5px); /* Efek 'lift' */
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); /* Bayangan lebih besar */
+  transform: translateY(-5px); 
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); 
 }
 
 .sidebar-news-item:hover,
 .latest-news-item a:hover {
-  transform: translateX(4px); /* Bergeser sedikit ke kanan */
+  transform: translateX(4px); 
 }
 
 
-/* --- Skeleton Loader Styles --- */
 
-/* Base untuk semua skeleton */
 .skeleton-card {
   border-radius: 8px;
   margin-bottom: 1.5rem;
-  overflow: hidden; /* Penting untuk animasi shimmer */
+  overflow: hidden;
 }
 
-/* Base untuk elemen skeleton */
+
 .skeleton-image,
 .skeleton-image-small,
 .skeleton-text {
-  background-color: var(--secondary-bg-dark); /* Warna dasar skeleton */
+  background-color: var(--secondary-bg-dark); 
 }
 
 .skeleton-text {
@@ -563,7 +586,6 @@ footer {
 .skeleton-text.long { width: 100%; }
 
 
-/* Skeleton untuk Hero (Tengah) */
 .hero-skeleton {
   background-color: var(--secondary-bg-dark);
   border: 1px solid var(--accent-secondary);
@@ -576,7 +598,7 @@ footer {
   padding: 1.5rem;
 }
 
-/* Skeleton untuk Sidebar Kanan */
+
 .sidebar-skeleton {
   display: flex;
   gap: 0.8rem;
@@ -588,14 +610,14 @@ footer {
   width: 100px;
   height: 70px;
   border-radius: 4px;
-  flex-shrink: 0; /* Mencegah gambar mengecil */
+  flex-shrink: 0; 
 }
 .sidebar-skeleton .skeleton-content {
   flex-grow: 1;
   padding-top: 0.25rem;
 }
 
-/* Skeleton untuk Sidebar Kiri */
+
 .latest-skeleton {
   padding-bottom: 1rem;
   margin-bottom: 1rem;
@@ -603,7 +625,6 @@ footer {
 }
 
 
-/* --- Animasi Shimmer --- */
 .shimmer {
   position: relative;
   overflow: hidden;
@@ -616,10 +637,9 @@ footer {
   left: -150%;
   width: 150%;
   height: 100%;
-  /* Gradient yang akan bergerak */
   background: linear-gradient(90deg, 
     transparent 0%, 
-    rgba(66, 71, 105, 0.5) 50%, /* (var(--accent-secondary) dengan transparansi) */
+    rgba(66, 71, 105, 0.5) 50%, 
     transparent 100%
   );
   animation: shimmer-animation 1.5s infinite linear;

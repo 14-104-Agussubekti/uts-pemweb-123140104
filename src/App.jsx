@@ -3,110 +3,165 @@ import { formatDistanceToNow } from 'date-fns';
 import { id } from 'date-fns/locale';
 import { FaSearch, FaNewspaper, FaCaretDown, FaTimes } from 'react-icons/fa'; 
 import Navbar from './components/Navbar';
-import ArticleList from './components/ArticleList';
 import Pagination from './components/Pagination';
-import SkeletonCard from './components/SkeletonCard'; // Impor SkeletonCard
+import SkeletonCard from './components/SkeletonCard';
 
-// --- PENGATURAN API (NEWSAPI.ORG) ---
 const API_KEY = 'e88f8987481848ad96196d4b4f0856d1';
 const BASE_URL = 'https://newsapi.org/v2/everything';
 const PAGE_SIZE = 12;
 
 function App() {
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true); // Pastikan ini 'true' saat awal
+  // State untuk data
+  const [articles, setArticles] = useState([]); 
+  const [allArticles, setAllArticles] = useState([]); 
+  
+  // State untuk UI
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
+  // State untuk filter (HANYA digunakan di mode DEV)
   const [category, setCategory] = useState('');
   const [query, setQuery] = useState('');
   const [date, setDate] = useState('');
   const [language, setLanguage] = useState('en');
-  const [country, setCountry] = useState('us'); 
-
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-
+  
+  // State untuk modal
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isEditionOpen, setIsEditionOpen] = useState(false);
   const [modalSearchQuery, setModalSearchQuery] = useState('');
 
+  // --- EFEK UTAMA UNTUK MENGAMBIL DATA ---
   useEffect(() => {
-    const fetchNews = async () => {
-      setLoading(true); // Set loading ke true SETIAP kali fetch dimulai
+    const fetchData = async () => {
+      setLoading(true);
       setError(null);
-      const params = new URLSearchParams({
-        apikey: API_KEY,
-        page: page,
-        pageSize: PAGE_SIZE,
-      });
-      if (query) {
-        params.append('q', query);
-      } else if (category) {
-        params.append('q', category);
-      } else {
-        params.append('q', 'berita'); 
-      }
-      if (date) {
-        params.append('from', date);
-        params.append('to', date);
-      }
-      if (language) {
-        params.append('language', language);
-      }
-      const url = `${BASE_URL}?${params.toString()}`;
-      console.log('Fetching URL (NewsAPI):', url);
-      
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`HTTP error! status: ${response.status} (${errorData.message})`);
+
+
+      if (import.meta.env.DEV) {
+        console.log("MODE: Development (Fetching from Live API)");
+        
+        const params = new URLSearchParams({
+          apikey: API_KEY,
+          page: page,
+          pageSize: PAGE_SIZE,
+        });
+
+        if (query) {
+          params.append('q', query);
+        } else if (category) {
+          params.append('q', category);
+        } else {
+          params.append('q', 'berita'); 
         }
-        const data = await response.json();
-        setArticles(data.articles || []);
-        setTotalPages(Math.ceil(data.totalResults / PAGE_SIZE) || 1);
-      
-      // 👇 PERBAIKAN TYPO ADA DI SINI (tanda '_' dihapus)
-      } catch (e) { 
-        setError(e.message);
-        setArticles([]); 
-      } finally {
-        setLoading(false);
+        
+        if (date) params.append('from', date);
+        if (language) params.append('language', language);
+
+        const url = `${BASE_URL}?${params.toString()}`;
+        console.log('Fetching URL (NewsAPI):', url);
+
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`HTTP error! status: ${response.status} (${errorData.message})`);
+          }
+          const data = await response.json();
+          setArticles(data.articles || []); 
+          setTotalPages(Math.ceil(data.totalResults / PAGE_SIZE) || 1);
+          
+        } catch (e) { 
+          setError(e.message);
+          setArticles([]); 
+        } finally {
+          setLoading(false);
+        }
+
+      } else {
+        console.log("MODE: Production (Fetching from Local JSON)");
+        try {
+          let dataToPaginate = allArticles;
+
+          // Jika 'allArticles' belum diisi, ambil dari JSON
+          if (allArticles.length === 0) {
+            const response = await fetch('/dummy-data.json');
+            if (!response.ok) throw new Error("Gagal memuat dummy-data.json");
+            const data = await response.json();
+            dataToPaginate = data.articles || [];
+            setAllArticles(dataToPaginate);
+            setTotalPages(Math.ceil(dataToPaginate.length / PAGE_SIZE));
+          }
+
+          // Lakukan paginasi sisi klien
+          const startIndex = (page - 1) * PAGE_SIZE;
+          const endIndex = startIndex + PAGE_SIZE;
+          setArticles(dataToPaginate.slice(startIndex, endIndex));
+          
+        } catch (e) {
+          setError(e.message);
+          setArticles([]);
+        } finally {
+          setLoading(false);
+        }
       }
     };
-    fetchNews();
+    
+    fetchData();
   }, [category, query, date, language, page]);
 
-  // Handler untuk kategori
-  const handleCategoryClick = (newCategory) => {
-    setCategory(newCategory);
-    setQuery(''); 
-    setDate(''); 
-    setPage(1); 
+
+  const showDisabledAlert = () => {
+    alert("Fitur ini dinonaktifkan di versi live (menggunakan data statis).");
   };
 
-  // Handler submit utama
+  const handleCategoryClick = (newCategory) => {
+    if (import.meta.env.DEV) {
+      setCategory(newCategory);
+      setQuery(''); 
+      setDate(''); 
+      setPage(1); 
+    } else {
+      showDisabledAlert();
+    }
+  };
+
   const handleSearchSubmit = (searchParams) => {
-    setQuery(searchParams.query || '');
-    setDate(searchParams.date || '');
-    setLanguage(searchParams.language || 'en');
-    setCountry(searchParams.country || 'us');
-    setCategory(''); 
-    setPage(1);
-    setIsSearchOpen(false);
-    setModalSearchQuery('');
+    if (import.meta.env.DEV) {
+      setQuery(searchParams.query || '');
+      setDate(searchParams.date || '');
+      setLanguage(searchParams.language || 'en');
+      setCategory(''); 
+      setPage(1);
+      setIsSearchOpen(false);
+      setModalSearchQuery('');
+    } else {
+      showDisabledAlert();
+      setIsSearchOpen(false);
+    }
   };
   
-  // Handler untuk UI
-  const openSearch = () => setIsSearchOpen(true);
-  const closeSearch = () => {
-    setIsSearchOpen(false);
-    setModalSearchQuery('');
+  const openSearch = () => {
+    if (import.meta.env.DEV) {
+      setIsSearchOpen(true);
+    } else {
+      showDisabledAlert();
+    }
   };
+  
+  const closeSearch = () => setIsSearchOpen(false);
 
-  const toggleEditionMenu = () => setIsEditionOpen(prev => !prev);
+  const toggleEditionMenu = () => {
+    if (import.meta.env.DEV) {
+      setIsEditionOpen(prev => !prev);
+    } else {
+      showDisabledAlert();
+    }
+  };
+  
   const handleEditionSelect = (edition) => {
-    console.log("Edisi dipilih:", edition);
+    console.log("Edisi dipilih:", edition); 
     setIsEditionOpen(false);
   };
 
@@ -114,27 +169,27 @@ function App() {
     e.preventDefault();
     handleSearchSubmit({ query: modalSearchQuery });
   };
+  
   const handleTrendingClick = (topic) => {
     handleSearchSubmit({ query: topic });
   };
 
-  // Handler untuk gambar yang error (CORS/Hotlink block)
+  // Handler ini universal
   const handleImageError = (e) => {
     e.target.src = '/placeholder.jpg';
   };
-
-  // Handler pagination
-  const handlePrevPage = () => setPage((prev) => Math.max(prev - 1, 1));
-  const handleNextPage = () => setPage((prev) => Math.min(prev + 1, totalPages));
-
-  // Fungsi helper untuk format waktu
+  const handlePrevPage = () => {
+    setPage((prev) => Math.max(prev - 1, 1));
+  };
+  const handleNextPage = () => {
+    setPage((prev) => Math.min(prev + 1, totalPages));
+  };
   const formatTimeAgo = (dateString) => {
     if (!dateString) return '';
     try {
       const date = new Date(dateString);
       return formatDistanceToNow(date, { addSuffix: true, locale: id });
     } catch (error) {
-      console.error("Format tanggal error:", error);
       return "beberapa waktu lalu";
     }
   };
@@ -203,7 +258,6 @@ function App() {
       <main className="main-content-layout">
         <aside className="sidebar-left">
           <h2 className="section-title">Terbaru</h2>
-          {/* Kondisi Loading untuk Skeleton */ }
           {loading ? (
             [1, 2, 3].map(n => <SkeletonCard key={n} type="latest" />)
           ) : error ? (
@@ -221,7 +275,6 @@ function App() {
         </aside>
 
         <section className="main-article-section">
-          {/* Kondisi Loading untuk Skeleton */ }
           {loading ? (
             <SkeletonCard type="hero" />
           ) : error ? (
@@ -236,7 +289,7 @@ function App() {
                   onError={handleImageError} 
                 />
                 <div className="hero-content">
-                  <span className="hero-category">Asia</span>
+                  <span className="hero-category">Berita</span>
                   <h2 className="hero-title">{articles[0].title}</h2>
                   <p className="hero-time">
                     {formatTimeAgo(articles[0].publishedAt)}
@@ -248,7 +301,6 @@ function App() {
         </section>
 
         <aside className="sidebar-right">
-          {/* Kondisi Loading untuk Skeleton */ }
           {loading ? (
             [1, 2, 3].map(n => <SkeletonCard key={n} type="sidebar" />)
           ) : error ? (
@@ -263,7 +315,7 @@ function App() {
                   onError={handleImageError}
                 />
                 <div className="sidebar-item-content">
-                  <span className="sidebar-item-category">Lifestyle</span>
+                  <span className="sidebar-item-category">Berita</span>
                   <h4 className="sidebar-item-title">{article.title}</h4>
                   <p className="sidebar-item-time">
                     {formatTimeAgo(article.publishedAt)}
@@ -275,8 +327,7 @@ function App() {
         </aside>
       </main>
 
-      {/* Pagination (kita mungkin perlu menyembunyikannya) */}
-      {/* {!loading && !error && articles.length > 0 && (
+      {!loading && !error && articles.length > 0 && (
         <Pagination
           currentPage={page}
           totalPages={totalPages}
@@ -284,10 +335,9 @@ function App() {
           onNextPage={handleNextPage}
         />
       )}
-      */}
 
       <footer>
-        <p>&copy; 2025 News Portal. Dibuat dengan React & Vite.</p>
+        <p>&copy; 2025 123140104. VoxA.</p>
       </footer>
     </div>
   );
